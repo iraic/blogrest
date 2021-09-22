@@ -26,6 +26,6 @@ $router->group(['middleware'=>['auth']], function() use($router){
     $router->put('/usuario/{user}', 'UserController@update');
     $router->delete('/usuario/{user}', 'UserController@destroy');
 
-
+    //
 }
 );
