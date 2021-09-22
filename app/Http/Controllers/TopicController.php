@@ -49,7 +49,6 @@ class TopicController extends Controller
         
         $datos = Topic::find($id);
         if(!$datos) return response()->json(['status'=>'failed'], 404);
-        if(!$datos) return response()->json(['status'=>'failed'], 404);
         $result = $datos->delete();
         if($result)
             return response()->json(['status'=>'success'], 200);

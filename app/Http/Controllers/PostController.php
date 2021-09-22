@@ -41,7 +41,7 @@ class PostController extends Controller
         
         $datos = Post::find($id);
         if(!$datos) return response()->json(['status'=>'failed'], 404);
-        if($req->user() != $datos->user) return response()->json(['status'=>'failed'], 401);
+        if($req->user()->user != $datos->user) return response()->json(['status'=>'failed'], 401);
         $result = $datos->fill($req->all())->save();
         if($result)
             return response()->json(['status'=>'success'], 200);
@@ -52,7 +52,6 @@ class PostController extends Controller
     public function destroy($id){
         
         $datos = Post::find($id);
-        if(!$datos) return response()->json(['status'=>'failed'], 404);
         if(!$datos) return response()->json(['status'=>'failed'], 404);
         $result = $datos->delete();
         if($result)
