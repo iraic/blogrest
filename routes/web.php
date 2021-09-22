@@ -20,7 +20,7 @@ $router->get('/', function () use ($router) {
 
 $router->get('/login/{user}/{pass}', 'AuthController@login');
 
-$router->group(['middleware'=>['auth']], function() use($router){
+$router->group(['middleware'=>['auth','cors']], function() use($router){
     $router->get('/usuario', 'UserController@index');
     $router->get('/usuario/{user}', 'UserController@get');
     $router->post('/usuario', 'UserController@create');
