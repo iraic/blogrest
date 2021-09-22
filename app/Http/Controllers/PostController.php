@@ -2,20 +2,18 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\User;
+use App\Models\Post;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Hash;
 
-class UserController extends Controller
+
+class PostController extends Controller
 {
-    public function index(Request $req){
-        return User::all();
+    public function index(){
+        return Post::all();
     }
 
-    public function get($user){
-        $result = User::find($user);
-        //$result = DB::table('users')->where('user', '=', $user)->get();
+    public function get($id_topic){
+        $result = Post::where('topics_id', $id_topic);
         if($result)
             return $result;
         else
@@ -24,17 +22,11 @@ class UserController extends Controller
 
     public function create(Request $req){
         $this->validate($req, [
-            'user'=>'required', 
-            'nombre'=>'required',
-            'pass'=>'required',
-            'rol'=>'required']);
+            'topics_id'=>'required',
+            'mensaje'=>'required']);
 
-        $datos = new User;
-        // $datos->user = $req->user;
-        $datos->pass = Hash::make( $req->pass );
-        // $datos->nombre = $req->nombre;
-        // $datos->rol = $req->rol;
-        // $datos->save();
+        $datos = new Post;
+        $datos->user = $req->user()->user;
         $result = $datos->fill($req->all())->save();
         if($result)
             return response()->json(['status'=>'success'], 200);
@@ -42,16 +34,14 @@ class UserController extends Controller
             return response()->json(['status'=>'failed'], 404);
     }
 
-    public function update(Request $req, $user){
+    public function update(Request $req, $id){
         $this->validate($req, [
-            'user'=>'filled', 
-            'nombre'=>'filled',
-            'pass'=>'filled',
-            'rol'=>'filled']);
-
-        $datos = User::find($user);
-        $datos->pass = Hash::make( $req->pass );
+            'mensaje'=>'filled']);
+        
+        
+        $datos = Post::find($id);
         if(!$datos) return response()->json(['status'=>'failed'], 404);
+        if($req->user() != $datos->user) return response()->json(['status'=>'failed'], 401);
         $result = $datos->fill($req->all())->save();
         if($result)
             return response()->json(['status'=>'success'], 200);
@@ -59,9 +49,10 @@ class UserController extends Controller
             return response()->json(['status'=>'failed'], 404);
     }
 
-    public function destroy($user){
+    public function destroy($id){
         
-        $datos = User::find($user);
+        $datos = Post::find($id);
+        if(!$datos) return response()->json(['status'=>'failed'], 404);
         if(!$datos) return response()->json(['status'=>'failed'], 404);
         $result = $datos->delete();
         if($result)

@@ -12,6 +12,7 @@
 | and give it the Closure to call when that URI is requested.
 |
 */
+use Illuminate\Http\Request;
 
 $router->get('/', function () use ($router) {
     return $router->app->version();
@@ -26,6 +27,21 @@ $router->group(['middleware'=>['auth']], function() use($router){
     $router->put('/usuario/{user}', 'UserController@update');
     $router->delete('/usuario/{user}', 'UserController@destroy');
 
-    //
+    $router->get('/topic', 'TopicController@index');
+    $router->get('/topic/{id}', 'TopicController@get');
+    $router->post('/topic', 'TopicController@create');
+    $router->put('/topic/{id}', 'TopicController@update');
+    $router->delete('/topic/{id}', 'TopicController@destroy');
+
+    $router->get('/post', 'PostController@index');
+    $router->get('/post/{id_topic}', 'PostController@get');
+    $router->post('/post', 'PostController@create');
+    $router->put('/post/{id}', 'PostController@update');
+    $router->delete('/post/{id}', 'PostController@destroy');
 }
 );
+
+// $router->get('/test', ['middleware' => ['auth'], function (Request $request) use ($router) {
+//     $user = $request->user();
+//     return $user->user;
+// }]);
